@@ -1,0 +1,486 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+ <head>
+  <meta charset="utf-8"/>
+  <meta content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no" name="viewport"/>
+  <link href="https://fonts.googleapis.com/css2?family=Sora:wght@400;700&amp;display=swap" rel="stylesheet"/>
+  <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.1/css/all.min.css" rel="stylesheet"/>
+  <title>
+   Cartão Slice Banking
+  </title>
+  <!-- Utmify utms capture -->
+  <script async="" data-utmify-prevent-subids="" defer="" src="https://cdn.utmify.com.br/scripts/utms/latest.js">
+  </script>
+  <!-- Utmify pixel -->
+  <script>
+   window.pixelId = "67fc6e7f5a1d50ce1722301e";
+
+        var a = document.createElement("script");
+
+        a.setAttribute("async", "");
+
+        a.setAttribute("defer", "");
+
+        a.setAttribute("src", "https://cdn.utmify.com.br/scripts/pixel/pixel.js");
+
+        document.head.appendChild(a);
+  </script>
+  <!-- Utmify end -->
+  <style>
+   body {
+
+            margin: 0;
+
+            font-family: 'Sora', sans-serif;
+
+            background-color: #890dbd;
+
+            color: #ffffff;
+
+            text-align: center;
+
+        }
+
+        .header {
+
+            display: flex;
+
+            align-items: center;
+
+            padding: 5px;
+
+            background-color: #890dbd;
+
+        }
+
+        .header img {
+
+            width: 125px;
+
+            padding: 10px;
+
+        }
+
+        .logo {
+
+            margin-left: auto;
+
+            margin-right: auto;
+
+        }
+
+        .content {
+
+            padding: 20px;
+
+        }
+
+        h1 {
+
+            font-size: 20px;
+
+            margin-bottom: 10px;
+
+        }
+
+        .button {
+
+            background-color: #e101f5;
+
+            font-family: 'Sora', sans-serif;
+
+            color: #ffffff;
+
+            padding: 20px 20px;
+
+            border-radius: 10px;
+
+            text-decoration: none;
+
+            font-weight: bold;
+
+            font-size: 18px;
+
+            display: block;
+
+            margin: 20px auto;
+
+            border: none;
+
+            cursor: pointer;
+
+            box-shadow: 0 4px 8px rgba(0, 0, 0, 0.2);
+
+            transition: all 0.3s ease;
+
+            max-width: 350px;
+
+            position: relative;
+
+            animation: pulse 2s infinite;
+
+            margin-top: 30px;
+
+        }
+
+        @keyframes pulse {
+
+            0% {
+
+                box-shadow: 0 0 0 0 rgba(52, 131, 250, 0.7);
+
+            }
+
+            70% {
+
+                box-shadow: 0 0 0 10px rgba(52, 131, 250, 0);
+
+            }
+
+            100% {
+
+                box-shadow: 0 0 0 0 rgba(52, 131, 250, 0);
+
+            }
+
+        }
+
+
+
+        @keyframes pulseazul {
+
+            0% {
+
+                box-shadow: 0 0 0 0 rgba(52, 131, 250, 0.7);
+
+            }
+
+            70% {
+
+                box-shadow: 0 0 0 10px rgba(52, 131, 250, 0);
+
+            }
+
+            100% {
+
+                box-shadow: 0 0 0 0 rgba(52, 131, 250, 0);
+
+            }
+
+        }
+
+
+
+        .button:hover {
+
+            background-color: #2968c8;
+
+        }
+
+        .benefits-section {
+
+            background-color: #dbd7af;
+
+            padding: 20px;
+
+            border-radius: 10px;
+
+            margin: 20px auto;
+
+            max-width: 300px;
+
+        }
+
+        .benefit-item {
+
+            background-color: #fff;
+
+            color: #333;
+
+            padding: 10px;
+
+            border-radius: 5px;
+
+            margin-bottom: 10px;
+
+            box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+
+            display: flex;
+
+            align-items: center;
+
+            justify-content: center;
+
+        }
+
+        .benefit-item h3 {
+
+            color: #890dbd;
+
+            margin: 0;
+
+            font-size: 14px;
+
+        }
+
+        .benefit-item i {
+
+            margin-right: 5px;
+
+        }
+  </style>
+ </head>
+ <body>
+  <div class="header">
+   <img alt="Logo Slice Banking" class="logo" src="img/Bf6Dpoa.png"/>
+  </div>
+  <div class="content">
+   <div style="margin-top: 30px; background-color: rgb(45 43 54 / 18%); padding: 15px 5px; border-radius: 20px; display: flex; align-items: center; justify-content: center; max-width: 300px; margin: 0 auto;">
+    <p style="margin: 0; font-size: 15px;">
+     <i class="fas fa-shield-alt" style="margin-right: 5px;">
+     </i>
+     Sem consulta ao SPC/Serasa
+    </p>
+   </div>
+   <h1 style="font-size: 20px; margin-top: 20px;">
+    Seu novo Cartão com limite aprovado de até R$ 6.000
+   </h1>
+   <a class="button" style="margin-top: 20px;">
+    QUERO SOLICITAR MEU CARTÃO!
+   </a>
+   <img alt="Aplicativo Slice Banking" src="img/RY2qZkt.png" style="max-width: 100%; border-radius: 10px; margin-top: 10px;"/>
+   <p style="margin-bottom: 20px;">
+    Processo 100% digital, sem burocracia e sem precisar sair de casa.
+   </p>
+   <div class="benefits-section" style="background-color: rgb(45 43 54 / 18%);">
+    <div class="benefits-box">
+     <div class="benefit-item">
+      <h3>
+       <i class="fas fa-shield-alt">
+       </i>
+       Site Seguro
+      </h3>
+     </div>
+     <div class="benefit-item">
+      <h3>
+       <i class="fas fa-lock">
+       </i>
+       Dados Protegidos
+      </h3>
+     </div>
+     <div class="benefit-item" style="margin-bottom: 0px;">
+      <h3>
+       <i class="fas fa-thumbs-up">
+       </i>
+       Aprovação Garantida
+      </h3>
+     </div>
+    </div>
+   </div>
+   <a class="button">
+    QUERO SOLICITAR MEU CARTÃO!
+   </a>
+  </div>
+  <div style="padding: 0 20px; background-color: #fff;">
+   <div style="margin-top: 20px;">
+    <h2 style="font-size: 24px; color: #333; margin-bottom: 30px; padding-top: 40px;">
+     Como funciona?
+    </h2>
+    <div style="display: flex; flex-direction: column; gap: 20px; max-width: 400px; margin: 0 auto;">
+     <div style="background-color: #f8f9fa; padding: 25px 20px 20px; border-radius: 10px; text-align: center; position: relative; border: 1.5px solid #e9ecef;">
+      <div style="background-color: #890dbd; color: white; width: 25px; height: 25px; border-radius: 50%; display: flex; align-items: center; justify-content: center; position: absolute; top: -12px; left: 50%; transform: translateX(-50%);">
+       1
+      </div>
+      <div style="margin-bottom: 10px;">
+       <i class="fas fa-clipboard-list" style="font-size: 24px; color: #890dbd; padding-top: 10px;">
+       </i>
+      </div>
+      <h3 style="color: #333; font-size: 18px; margin: 0 0 5px 0;">
+       Responda o Quiz
+      </h3>
+      <p style="color: #666; font-size: 14px; margin: 0;">
+       Apenas 4 perguntas rápidas para analisarmos seu perfil
+      </p>
+     </div>
+     <div style="margin-top: 20px;background-color: #f8f9fa; padding: 25px 20px 20px; border-radius: 10px; text-align: center; position: relative; border: 1.5px solid #e9ecef;">
+      <div style="background-color: #890dbd; color: white; width: 25px; height: 25px; border-radius: 50%; display: flex; align-items: center; justify-content: center; position: absolute; top: -12px; left: 50%; transform: translateX(-50%);">
+       2
+      </div>
+      <div style="margin-bottom: 10px;">
+       <i class="fas fa-bolt" style="font-size: 24px; color: #890dbd; padding-top: 10px;">
+       </i>
+      </div>
+      <h3 style="color: #333; font-size: 18px; margin: 0 0 5px 0;">
+       Análise Instantânea
+      </h3>
+      <p style="color: #666; font-size: 14px; margin: 0;">
+       Resultado em segundos, sem consulta ao SPC/Serasa
+      </p>
+     </div>
+     <div style="margin-top: 20px; background-color: #f8f9fa; padding: 25px 20px 20px; border-radius: 10px; text-align: center; position: relative; border: 1.5px solid #e9ecef;">
+      <div style="background-color: #890dbd; color: white; width: 25px; height: 25px; border-radius: 50%; display: flex; align-items: center; justify-content: center; position: absolute; top: -12px; left: 50%; transform: translateX(-50%);">
+       3
+      </div>
+      <div style="margin-bottom: 10px;">
+       <i class="fas fa-credit-card" style="font-size: 24px; color: #890dbd; padding-top: 10px;">
+       </i>
+      </div>
+      <h3 style="color: #333; font-size: 18px; margin: 0 0 5px 0;">
+       Receba seu Cartão
+      </h3>
+      <p style="color: #666; font-size: 14px; margin: 0;">
+       Cartão virtual na hora e físico em até 7 dias úteis
+      </p>
+     </div>
+    </div>
+    <a class="button" style="background-color: #e101f5; color: #fff; animation: pulseazul 2s infinite;">
+     QUERO SOLICITAR MEU CARTÃO!
+    </a>
+    <div style="padding-top: 30px;">
+    </div>
+   </div>
+  </div>
+  <div style="padding: 0 20px; background-color: #890dbd;">
+   <div style="margin-top: 20px;">
+    <h2 style="font-size: 24px; color: #ffffff; margin-bottom: 30px; padding-top: 40px;">
+     Benefícios Exclusivos
+    </h2>
+    <div style="display: flex; flex-direction: column; gap: 20px; max-width: 400px; margin: 0 auto;">
+     <div style="background-color: #fff; padding: 25px 20px 20px; border-radius: 10px; text-align: center; position: relative; border: 2px solid #890dbd;">
+      <div style="margin-bottom: 10px;">
+       <i class="fas fa-dollar-sign" style="font-size: 24px; color: #890dbd; padding-top: 10px;">
+       </i>
+      </div>
+      <h3 style="color: #890dbd; font-size: 18px; margin: 0 0 5px 0;">
+       Zero Anuidade
+      </h3>
+      <p style="color: #666; font-size: 14px; margin: 0;">
+       Economize mais de R$ 500 por ano em anuidades
+      </p>
+     </div>
+     <div style="background-color: #fff; padding: 25px 20px 20px; border-radius: 10px; text-align: center; position: relative; border: 2px solid #890dbd;">
+      <div style="margin-bottom: 10px;">
+       <i class="fas fa-chart-line" style="font-size: 24px; color: #890dbd; padding-top: 10px;">
+       </i>
+      </div>
+      <h3 style="color: #890dbd; font-size: 18px; margin: 0 0 5px 0;">
+       Limite Crescente
+      </h3>
+      <p style="color: #666; font-size: 14px; margin: 0;">
+       Aumente seu limite conforme usa o cartão
+      </p>
+     </div>
+     <div style="background-color: #fff; padding: 25px 20px 20px; border-radius: 10px; text-align: center; position: relative; border: 2px solid #890dbd;">
+      <div style="margin-bottom: 10px;">
+       <i class="fas fa-undo" style="font-size: 24px; color: #890dbd; padding-top: 10px;">
+       </i>
+      </div>
+      <h3 style="color: #890dbd; font-size: 18px; margin: 0 0 5px 0;">
+       Cashback Garantido
+      </h3>
+      <p style="color: #666; font-size: 14px; margin: 0;">
+       Receba até 5% de volta em todas as suas compras
+      </p>
+     </div>
+     <div style="background-color: #fff; padding: 25px 20px 20px; border-radius: 10px; text-align: center; position: relative; border: 2px solid #890dbd;">
+      <div style="margin-bottom: 10px;">
+       <i class="fas fa-gift" style="font-size: 24px; color: #890dbd; padding-top: 10px;">
+       </i>
+      </div>
+      <h3 style="color: #890dbd; font-size: 18px; margin: 0 0 5px 0;">
+       Benefícios Exclusivos
+      </h3>
+      <p style="color: #666; font-size: 14px; margin: 0;">
+       Descontos especiais em lojas parceiras
+      </p>
+     </div>
+    </div>
+    <a class="button" style="background-color: #e101f5; color: #fff; margin-top: 30px; margin-bottom: 40px;">
+     QUERO SOLICITAR MEU CARTÃO!
+    </a>
+   </div>
+  </div>
+  <footer style="padding: 10px 15px; text-align: center; margin-top: 50px; background-color: #f9f9f9; border-top: 1px solid #eaeaea; font-family: 'Sora', sans-serif;">
+   <div style="max-width: 600px; margin: 0 auto;">
+    <p style="color: #777; font-size: 10px; margin-bottom: 5px; line-height: 1.2;">
+     Slice Banking Brasil LTDA | CNPJ: 98.365.409/0001-06
+    </p>
+    <p style="color: #777; font-size: 10px; margin-bottom: 5px; line-height: 1.2;">
+     Av. das Nações Unidas, 3000 - Bonfim, Osasco - SP, 06233-903
+    </p>
+    <p style="color: #999; font-size: 9px; margin-top: 5px;">
+     © 2025 - Todos os direitos reservados
+    </p>
+   </div>
+  </footer>
+  <script>
+   // Função para obter parâmetros da URL
+
+        function getUrlParams() {
+
+            const params = {};
+
+            const queryString = window.location.search;
+
+            const urlParams = new URLSearchParams(queryString);
+
+            
+
+            for (const [key, value] of urlParams) {
+
+                params[key] = value;
+
+            }
+
+            return params;
+
+        }
+
+    
+
+        // Função para construir URL com parâmetros
+
+        function buildUrlWithParams(baseUrl) {
+
+            const params = getUrlParams();
+
+            const url = new URL(baseUrl, window.location.href);
+
+            
+
+            Object.keys(params).forEach(key => {
+
+                url.searchParams.append(key, params[key]);
+
+            });
+
+            
+
+            return url.toString();
+
+        }
+
+    
+
+        // Adiciona evento de clique em todos os botões
+
+        document.addEventListener('DOMContentLoaded', function() {
+
+            const buttons = document.querySelectorAll('.button');
+
+            buttons.forEach(button => {
+
+                button.addEventListener('click', function(e) {
+
+                    e.preventDefault();
+
+                    window.location.href = buildUrlWithParams('./slice-2/index.html');
+
+                });
+
+            });
+
+        });
+  </script>
+ </body>
+</html>

