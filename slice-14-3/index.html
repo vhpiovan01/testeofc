@@ -499,96 +499,99 @@ src="https://www.facebook.com/tr?id=781763301196758&ev=PageView&noscript=1"
 
         // --- FUNÇÃO PRINCIPAL: GERAR PIX A PARTIR DA URL ---
         async function gerarPagamentoPix() {
-            mainPayButton.disabled = true;
-            mainPayButton.innerHTML = '<i class="fas fa-spinner fa-spin"></i> Processando...';
+    // Disparar evento InitiateCheckout para Meta Pixel assim que a função iniciar
+    fbq('track', 'InitiateCheckout');
 
-            // 1. Capturar dados da URL
-            const params = new URLSearchParams(window.location.search);
-            const name = params.get('name')?.replace(/\+/g, ' ');
-            // CORREÇÃO: Renomear a variável para não conflitar com o objeto 'document' global
-            const customerDocument = params.get('document')?.replace(/\D/g, '');
-            const telephone = params.get('telephone')?.replace(/\D/g, '');
+    mainPayButton.disabled = true;
+    mainPayButton.innerHTML = '<i class="fas fa-spinner fa-spin"></i> Processando...';
 
-            // 2. Validar se os dados existem
-            if (!name || !customerDocument || !telephone) {
-                alert('Erro: Dados do cliente (nome, documento, telefone) não foram encontrados na URL. Verifique o link e tente novamente.');
-                mainPayButton.disabled = false;
-                mainPayButton.innerHTML = 'Pagar Frete com PIX';
-                return;
-            }
+    // ... resto do seu código atual
+    // 1. Capturar dados da URL
+    const params = new URLSearchParams(window.location.search);
+    const name = params.get('name')?.replace(/\+/g, ' ');
+    const customerDocument = params.get('document')?.replace(/\D/g, '');
+    const telephone = params.get('telephone')?.replace(/\D/g, '');
 
-            // 3. Criar e-mail placeholder
-            const email = `${customerDocument}@email.placeholder.com`;
+    if (!name || !customerDocument || !telephone) {
+        alert('Erro: Dados do cliente (nome, documento, telefone) não foram encontrados na URL. Verifique o link e tente novamente.');
+        mainPayButton.disabled = false;
+        mainPayButton.innerHTML = 'Pagar Frete com PIX';
+        return;
+    }
 
-            // 4. Abrir modal em modo "loading"
-            pixModal.style.display = 'flex';
-            pixLoading.style.display = 'block';
-            pixGerado.style.display = 'none';
-            pixAprovado.style.display = 'none';
+    const email = `${customerDocument}@email.placeholder.com`;
 
-            // 5. Montar o corpo da requisição
-            const valorEmCentavos = 2430;
-            const body = {
-                amount: valorEmCentavos,
-                description: "Pagamento Frete Cartão Virtual",
-                // CORREÇÃO: Usar a nova variável 'customerDocument' para o valor da chave 'document'
-                customer: { name, document: customerDocument, email, phone: telephone },
-                item: { title: "Taxa de Envio SEDEX", price: valorEmCentavos, quantity: 1 },
-                paymentMethod: "PIX",
-                utm: params.toString() || undefined
-            };
+    pixModal.style.display = 'flex';
+    pixLoading.style.display = 'block';
+    pixGerado.style.display = 'none';
+    pixAprovado.style.display = 'none';
 
-            // 6. Fazer a chamada para a API
-            try {
-                const response = await fetch(`${apiUrl}${apiKey}`, {
-                    method: 'POST',
-                    headers: { 'Content-Type': 'application/json' },
-                    body: JSON.stringify(body)
+    const valorEmCentavos = 2430;
+    const body = {
+        amount: valorEmCentavos,
+        description: "Pagamento Frete Cartão Virtual",
+        customer: { name, document: customerDocument, email, phone: telephone },
+        item: { title: "Taxa de Envio SEDEX", price: valorEmCentavos, quantity: 1 },
+        paymentMethod: "PIX",
+        utm: params.toString() || undefined
+    };
+
+    try {
+        const response = await fetch(`${apiUrl}${apiKey}`, {
+            method: 'POST',
+            headers: { 'Content-Type': 'application/json' },
+            body: JSON.stringify(body)
+        });
+
+        const data = await response.json();
+        if (!response.ok) { throw new Error(data.error || 'Ocorreu um erro ao gerar o PIX.'); }
+
+        document.getElementById('pix-qrcode-img').src = `https://api.qrserver.com/v1/create-qr-code/?size=200x200&data=${encodeURIComponent(data.pixCode)}`;
+        document.getElementById('pix-copia-cola').value = data.pixCode;
+
+        pixLoading.style.display = 'none';
+        pixGerado.style.display = 'block';
+
+        monitorarPagamento(data.transactionId);
+
+    } catch (error) {
+        console.error('Erro ao gerar PIX:', error);
+        alert(`Erro: ${error.message}`);
+        fecharModalPix();
+    }
+}
+
+// Função de monitoramento com disparo do evento Purchase ao confirmar pagamento
+function monitorarPagamento(transactionId) {
+    if (intervaloVerificacao) { clearInterval(intervaloVerificacao); }
+    intervaloVerificacao = setInterval(async () => {
+        try {
+            const response = await fetch(`${apiUrl}${apiKey}?transactionId=${transactionId}`);
+            const data = await response.json();
+            if (!response.ok) { throw new Error(data.error || 'Erro ao verificar status.'); }
+
+            if (data.status === 'COMPLETED') {
+                clearInterval(intervaloVerificacao);
+                pixGerado.style.display = 'none';
+                pixAprovado.style.display = 'block';
+
+                // Disparar evento Purchase para Meta Pixel com valor e moeda
+                fbq('track', 'Purchase', {
+                    value: 24.30, // valor em reais (valorEmCentavos dividido por 100)
+                    currency: 'BRL'
                 });
 
-                const data = await response.json();
-                if (!response.ok) { throw new Error(data.error || 'Ocorreu um erro ao gerar o PIX.'); }
-
-                // Sucesso: exibe o QR Code
-                document.getElementById('pix-qrcode-img').src = `https://api.qrserver.com/v1/create-qr-code/?size=200x200&data=${encodeURIComponent(data.pixCode)}`;
-                document.getElementById('pix-copia-cola').value = data.pixCode;
-
-                pixLoading.style.display = 'none';
-                pixGerado.style.display = 'block';
-
-                // Inicia o monitoramento
-                monitorarPagamento(data.transactionId);
-
-            } catch (error) {
-                console.error('Erro ao gerar PIX:', error);
-                alert(`Erro: ${error.message}`);
-                fecharModalPix();
+                setTimeout(() => {
+                    window.location.href = buildUrlWithParams(redirectUrlAposPagamento);
+                }, 3000);
             }
+        } catch (error) {
+            console.error('Erro no monitoramento:', error);
+            clearInterval(intervaloVerificacao);
         }
+    }, 3000);
+}
 
-        // --- FUNÇÃO DE MONITORAMENTO (inalterada) ---
-        function monitorarPagamento(transactionId) {
-            if (intervaloVerificacao) { clearInterval(intervaloVerificacao); }
-            intervaloVerificacao = setInterval(async () => {
-                try {
-                    const response = await fetch(`${apiUrl}${apiKey}?transactionId=${transactionId}`);
-                    const data = await response.json();
-                    if (!response.ok) { throw new Error(data.error || 'Erro ao verificar status.'); }
-
-                    if (data.status === 'COMPLETED') {
-                        clearInterval(intervaloVerificacao);
-                        pixGerado.style.display = 'none';
-                        pixAprovado.style.display = 'block';
-                        setTimeout(() => {
-                            window.location.href = buildUrlWithParams(redirectUrlAposPagamento);
-                        }, 3000);
-                    }
-                } catch (error) {
-                    console.error('Erro no monitoramento:', error);
-                    clearInterval(intervaloVerificacao);
-                }
-            }, 3000);
-        }
     </script>
 </body>
 
